@@ -33,4 +33,10 @@ class OrderController extends Controller
     public function exportExcel() {
         return Excel::download(new OrdersExport, 'orders.xlsx');
     }
+
+    public function print($id) {
+        $order = Order::with('items.product')->findOrFail($id);
+        $pdf = Pdf::loadView('invoice', compact('order'));
+        return $pdf->download("invoice_{$id}.pdf");
+    }
 }
